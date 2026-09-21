@@ -4,9 +4,6 @@
 
 一个用纯 [MoonBit](https://www.moonbitlang.com/) 编写的 Lua 5.4 子集解释器。
 
-> 参赛项目：2026 MoonBit 国产基础软件生态开源大赛 / 黑客松（开发者工具方向）。
-> 当前为 AI 辅助修改的不完善版本，持续完善中。
-
 ## 项目简介
 
 mlua 实现了一个树遍历（tree-walking）解释器，支持 Lua 5.4 的一个实用子集：
