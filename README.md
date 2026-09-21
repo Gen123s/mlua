@@ -4,9 +4,6 @@
 
 A Lua 5.4 subset interpreter written in pure [MoonBit](https://www.moonbitlang.com/).
 
-> 参赛项目：2026 MoonBit 国产基础软件生态开源大赛 / 黑客松（开发者工具方向）。
-> 当前为 AI 辅助修改的不完善版本，持续完善中。
-
 ## What it does
 
 mlua implements a tree-walking interpreter for a useful subset of Lua 5.4:
