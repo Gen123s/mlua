@@ -1,0 +1,5 @@
+import {
+  "username/mlua" @lib,
+}
+
+pkgtype(kind: "executable")
