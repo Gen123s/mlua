@@ -1,5 +1,5 @@
 import {
-  "username/mlua" @lib,
+  "Gen123s/mlua" @lib,
 }
 
 pkgtype(kind: "executable")
