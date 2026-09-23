@@ -138,7 +138,7 @@ fn Parser::parse_postfix(self : Parser) -> Expr raise  {
         let args = self.parse_call_args()
         e = MethodCall(e, method, args)
       }
-      LParen | LBrace | LStr(_) | Name(_) => {
+      LParen | LBrace | LStr(_) => {
         let args = self.parse_call_args()
         e = Call(e, args)
       }
@@ -301,6 +301,10 @@ fn Parser::parse_stat(self : Parser) -> Stat? raise  {
     KwLocal => self.parse_local()
     KwIf => self.parse_if()
     KwWhile => self.parse_while()
+    KwDo => {
+      let _ = self.advance()
+      Some(Do(self.parse_block_until(KwEnd)))
+    }
     KwFor => self.parse_for()
     KwBreak => {
       let _ = self.advance()
@@ -392,7 +396,21 @@ fn Parser::parse_if(self : Parser) -> Stat? raise  {
   let _ = self.advance() // if
   let cond = self.parse_expr()
   self.expect(KwThen, "then")
-  let then_block = self.parse_block_until(KwElseif)
+  // Parse the then-block without consuming elseif/else/end terminators.
+  let then_block : Block = []
+  while !self.peek_kind(KwElseif) &&
+        !self.peek_kind(KwElse) &&
+        !self.peek_kind(KwEnd) &&
+        !self.peek_kind(Eof) {
+    if self.peek_kind(Semicolon) {
+      let _ = self.advance()
+      continue
+    }
+    match self.parse_stat() {
+      Some(st) => then_block.push(st)
+      None => break
+    }
+  }
   let else_block : Block =
     if self.peek_kind(KwElseif) {
       match self.parse_if() {
@@ -401,7 +419,19 @@ fn Parser::parse_if(self : Parser) -> Stat? raise  {
       }
     } else if self.peek_kind(KwElse) {
       let _ = self.advance()
-      self.parse_block_until(KwEnd)
+      let eb : Block = []
+      while !self.peek_kind(KwEnd) && !self.peek_kind(Eof) {
+        if self.peek_kind(Semicolon) {
+          let _ = self.advance()
+          continue
+        }
+        match self.parse_stat() {
+          Some(st) => eb.push(st)
+          None => break
+        }
+      }
+      self.expect(KwEnd, "end")
+      eb
     } else {
       self.expect(KwEnd, "end")
       []
