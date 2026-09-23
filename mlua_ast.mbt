@@ -46,6 +46,7 @@ pub enum Stat {
   LocalDecl(Array[String], Array[Expr])
   If(Expr, Block, Block)      // cond, then, else
   While(Expr, Block)
+  Do(Block)
   ForNum(String, Expr, Expr, Expr?, Block) // var, start, stop, step?, body
   ForIn(Array[String], Array[Expr], Block)
   Return(Array[Expr])
