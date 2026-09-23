@@ -1,5 +1,7 @@
 # mlua
 
+[![CI](https://github.com/Gen123s/mlua/actions/workflows/ci.yml/badge.svg)](https://github.com/Gen123s/mlua/actions/workflows/ci.yml)
+
 [English](README.md) | [简体中文](README.zh.md)
 
 A Lua 5.4 subset interpreter written in pure [MoonBit](https://www.moonbitlang.com/).
@@ -38,8 +40,7 @@ print("fib(10) =", fib(10))
 
 ## Status
 
-Supported: numbers, strings, booleans, nil, tables, closures, `if`/`while`/numeric
-`for`/generic `for`, `return`/`break`, `local function`, method calls, a small stdlib.
+Supported: numbers, strings, booleans, nil, tables, closures, `if`/`elseif`/`else`/`while`/`do` blocks/numeric `for` (with step)/generic `for`, `return`/`break`, `local function`, method calls, a small stdlib.
 
 Not yet: metatables, `goto`, `repeat`/`until`, varargs, modules, coroutines.
 
@@ -52,6 +53,7 @@ mlua_parser.mbt    Recursive-descent parser
 mlua_value.mbt     Runtime values
 mlua_env.mbt       Lexical environment chain
 mlua_interp.mbt    Tree-walking interpreter + stdlib
+mlua_features_test.mbt  Feature-level tests
 cmd/main/main.mbt  CLI demo
 ```
 
