@@ -403,6 +403,10 @@ fn exec_stat(env : Ref[Env], s : Stat) -> Ctrl raise  {
         _ => fail("generic for requires a table iterator")
       }
     }
+    Do(b) => {
+      let child = Env::new(Some(env))
+      exec_block(child.boxed(), b)
+    }
     Return(exprs) => {
       let vals = exprs.map(fn(e) { eval(env, e) })
       Return(vals)
