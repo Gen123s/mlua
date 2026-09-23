@@ -1,5 +1,7 @@
 # mlua
 
+[![CI](https://github.com/Gen123s/mlua/actions/workflows/ci.yml/badge.svg)](https://github.com/Gen123s/mlua/actions/workflows/ci.yml)
+
 [English](README.md) | [简体中文](README.zh.md)
 
 一个用纯 [MoonBit](https://www.moonbitlang.com/) 编写的 Lua 5.4 子集解释器。
@@ -38,7 +40,7 @@ print("fib(10) =", fib(10))
 
 ## 支持情况
 
-已支持：数字、字符串、布尔值、nil、表、闭包、`if`/`while`/数值 `for`/泛型 `for`、`return`/`break`、`local function`、方法调用、精简标准库。
+已支持：数字、字符串、布尔值、nil、表、闭包、`if`/`elseif`/`else`/`while`/`do` 块/数值 `for`（含步长）/泛型 `for`、`return`/`break`、`local function`、方法调用、精简标准库。
 
 暂不支持：metatable、`goto`、`repeat`/`until`、变长参数、模块系统、协程。
 
@@ -51,6 +53,7 @@ mlua_parser.mbt    递归下降语法分析器
 mlua_value.mbt     运行时值
 mlua_env.mbt       词法环境链
 mlua_interp.mbt    树遍历解释器 + 标准库
+mlua_features_test.mbt  特性级测试
 cmd/main/main.mbt  命令行示例
 ```
 
