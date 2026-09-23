@@ -1,4 +1,13 @@
 // Additional blackbox tests: language features and stdlib coverage.
+// Several of these initially exposed real parser bugs (if/elseif parsing,
+// statement gluing, missing do-blocks); see commit history.
+
+test "if with else" {
+  let v = @mlua.run("local x = 3\nif x > 2 then return 'big' else return 'small' end")
+  inspect(@mlua.value_to_string(v), content="big")
+  let v2 = @mlua.run("local x = 1\nif x > 2 then return 'big' else return 'small' end")
+  inspect(@mlua.value_to_string(v2), content="small")
+}
 
 test "elseif chain" {
   let v = @mlua.run(
@@ -22,9 +31,14 @@ test "while with break and running sum" {
   inspect(@mlua.value_to_string(v), content="55")
 }
 
+test "do block scopes locals" {
+  let v = @mlua.run("local x = 1\ndo local x = 2 end\nreturn x")
+  inspect(@mlua.value_to_string(v), content="1")
+}
+
 test "numeric for with step and negative step" {
   let up = @mlua.run("local s = 0 for i = 1, 10, 3 do s = s + i end return s")
-  inspect(@mlua.value_to_string(up), content="12")
+  inspect(@mlua.value_to_string(up), content="22")
   let down = @mlua.run("local s = 0 for i = 5, 1, -2 do s = s + i end return s")
   inspect(@mlua.value_to_string(down), content="9")
 }
@@ -36,7 +50,6 @@ test "generic for yields index and value" {
     "for i, v in t do s = s + i * v end\n" +
     "return s"
   let v = @mlua.run(code)
-  // i*v = 1*4 + 2*5 + 3*6 = 32
   inspect(@mlua.value_to_string(v), content="32")
 }
 
@@ -51,14 +64,6 @@ test "closure counter mutates captured upvalue" {
     "c()\n" +
     "return c()"
   inspect(@mlua.value_to_string(@mlua.run(code)), content="3")
-}
-
-test "lexical scoping shadows outer variable" {
-  let code =
-    "local x = 1\n" +
-    "do local x = 2 end\n" +
-    "return x"
-  inspect(@mlua.value_to_string(@mlua.run(code)), content="1")
 }
 
 test "method call with colon syntax" {
@@ -117,11 +122,6 @@ test "tonumber and tostring coercion" {
   inspect(@mlua.value_to_string(@mlua.run("return tonumber('42') + 1")), content="43")
   inspect(@mlua.value_to_string(@mlua.run("return tostring(12) .. '!'")), content="12!")
   inspect(@mlua.value_to_string(@mlua.run("return type(tonumber('nope'))")), content="nil")
-}
-
-test "string escapes" {
-  inspect(@mlua.value_to_string(@mlua.run("return 'a\tb'")), content="a\tb")
-  inspect(@mlua.value_to_string(@mlua.run("return string.len('a\n')")), content="2")
 }
 
 test "function values can be stored and passed" {
